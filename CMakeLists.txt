@@ -16,8 +16,9 @@ set(SOURCE_FILES
 	
 	
 # GP osc library 
-add_library (GPOscLib ${SOURCE_FILES} ${INCLUDE_FILES})
+add_library (GPOsc_Lib ${SOURCE_FILES} ${INCLUDE_FILES})
 
+target_include_directories(GPOsc_Lib PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}/libs/")
 
 
 set(TEST_SOURCE_FILES ${SOURCE_FILES}
@@ -25,8 +26,8 @@ set(TEST_SOURCE_FILES ${SOURCE_FILES}
 					  "${CMAKE_CURRENT_SOURCE_DIR}/test/test.cpp")
 
 
-add_executable(Test ${TEST_SOURCE_FILES} )
+add_executable(GPOsc_Test ${TEST_SOURCE_FILES} )
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/test")
-add_test (NAME Test COMMAND Test)
+add_test (NAME GPOsc_Test COMMAND GPOsc_Test)
 enable_testing (true)
