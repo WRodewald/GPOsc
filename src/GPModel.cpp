@@ -4,21 +4,42 @@
 
 using namespace GP;
 
-Model::Model(std::vector<std::pair<float, float>> points, const VarianceKernel & varKernel, unsigned int size)
+Model::Model(std::vector<std::pair<float, float>> points, const VarianceKernel & varKernel, unsigned int size, Generation gen)
 	: Size(size)
 {
-	auto numPoints = points.size();
+	unsigned int numPoints;
+
+	Eigen::VectorXf x, y;
 	// TODO, try/catch, assert all the stupid setups
 
-	Eigen::VectorXf x,y;
-	x.resize(points.size());
-	y.resize(points.size());
-
-	for (int i = 0; i <  points.size(); i++)
+	
+	if (gen == Generation::Periodic)
 	{
-		x[i] = points[i].first;
-		y[i] = points[i].second;
+		numPoints = 3 * points.size();
+		x.resize(numPoints);
+		y.resize(numPoints);
+
+		for (int i = 0; i < numPoints; i++)
+		{
+			float xOffset = (i < points.size()) ? -1 : ((i >= 2 * points.size()) ? +1 : 0);
+			x[i] = points[i % points.size()].first + xOffset;
+			y[i] = points[i % points.size()].second;
+		}
 	}
+	else
+	{
+		numPoints = points.size();
+		x.resize(numPoints);
+		y.resize(numPoints);
+
+		for (int i = 0; i < points.size(); i++)
+		{
+			x[i] = points[i].first;
+			y[i] = points[i].second;
+		}
+
+	}
+
 
 
 	// linear spaced x vector, discard x==1
@@ -88,12 +109,12 @@ const Eigen::VectorXf & GP::Model::getMean() const
 	return mean;
 }
 
-const Eigen::MatrixXf & GP::Model::getVar() const
+const GP::MatrixRowMaj & GP::Model::getVar() const
 {
 	return var;
 }
 
-const Eigen::MatrixXf & GP::Model::getVarInv() const
+const GP::MatrixRowMaj & GP::Model::getVarInv() const
 {
 	return var_inv;
 }

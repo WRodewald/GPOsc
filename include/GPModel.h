@@ -1,18 +1,28 @@
 #pragma once
 
 #include <vector>
-#include <Eigen/Dense>
+#define EIGEN_RUNTIME_NO_MALLOC
+#include "../libs/Eigen/Dense"
 
 #include "GPVarianceKernel.h"
 
 namespace GP
 {
+	using MatrixRowMaj = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 	
 
 	class Model
 	{
 	public:
-		Model(std::vector<std::pair<float, float>> points, const VarianceKernel &varKernel, unsigned int size);
+
+		enum class Generation
+		{
+			Single,
+			Periodic
+		};
+
+	public:
+		Model(std::vector<std::pair<float, float>> points, const VarianceKernel &varKernel, unsigned int size, Generation gen);
 		
 
 	public:
@@ -20,16 +30,16 @@ namespace GP
 		unsigned int getSize() const;
 
 		const Eigen::VectorXf & getMean()   const;
-		const Eigen::MatrixXf & getVar()    const;
-		const Eigen::MatrixXf & getVarInv() const;
+		const MatrixRowMaj & getVar()    const;
+		const MatrixRowMaj & getVarInv() const;
 
 
 	private:
 		const unsigned int Size;
 
 		Eigen::VectorXf mean;
-		Eigen::MatrixXf var;
-		Eigen::MatrixXf var_inv;
+		MatrixRowMaj var;
+		MatrixRowMaj var_inv;
 	};
 
 }
