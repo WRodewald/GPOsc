@@ -42,7 +42,7 @@ namespace GP
 		GP::Model *model{ nullptr };
 
 		float oscFreq{ 440.f/44100.f };
-		float progressionFreq{ 0.5f * 44100.f };
+		float progressionFreq{ 10.f / 44100.f };
 
 
 		// data level
@@ -79,7 +79,7 @@ inline float GP::ContinuousOsc::tick()
 	if (phase > 1) phase -= 1;
 
 	// read out
-	return std::tanh(readTable());
+	return readTable();
 
 }
 

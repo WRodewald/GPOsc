@@ -18,7 +18,7 @@ ContinuousOsc::ContinuousOsc(unsigned int wtSize)
 	for (int i = 0; i < rngs.size(); i++)
 	{
 		rngs[i].setSeed(std::rand());
-		float rngStep = 0.05;
+		float rngStep = 0.5;
 		rngs[i].setParameters(rngStep, 0.2 * rngStep);
 	}
 
@@ -61,7 +61,7 @@ void GP::ContinuousOsc::generateTable(std::vector<float>* table)
 		// calculate variance window
 		float phase = pIdx / static_cast<float>(WTSize);
 
-		float winPhase = (phase < 0.5) ? 10 * phase : 10 - 10 * (phase - 0.5);
+		float winPhase = (phase < 0.5) ? 10 * phase : 5 - 10 * (phase - 0.5);
 
 		winPhase = std::min(winPhase, 1.f);
 		float window = 0.5 - 0.5 * std::cos(M_PI * winPhase);
